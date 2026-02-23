@@ -1,0 +1,60 @@
+{% extends session.get('role') == 'patient' and "patient_base.html" or "admin_base.html" %}
+{% block title %}Book Appointment{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Book Appointment</h1>
+</section>
+
+<section class="card">
+  <div class="wizard-steps">
+    <span class="active">1. Doctor</span>
+    <span>2. Slot</span>
+    <span>3. Confirm</span>
+  </div>
+
+  <form method="post" action="{{ url_for('appointments.confirm_booking') }}" id="booking-form" class="form-grid">
+    {% if session.get('role') == 'admin' %}
+    <div class="form-group">
+      <label class="form-label">Patient</label>
+      <select class="form-input" name="patient_id" required>
+        <option value="">Select patient</option>
+        {% for p in patients %}
+        <option value="{{ p.patient_id }}">{{ p.patient_code }} - {{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label class="form-label">Doctor</label>
+      <select class="form-input" name="doctor_id" id="doctor_id" required>
+        <option value="">Select doctor</option>
+        {% for d in doctors %}
+        <option value="{{ d.doctor_id }}">{{ d.name }} ({{ d.specialization }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" name="appt_date" id="appt_date" required>
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Available Slots</label>
+      <div id="slot-grid" class="slot-grid"></div>
+      <input type="hidden" name="appt_time" id="appt_time" required>
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Reason</label>
+      <textarea class="form-input" name="reason" placeholder="Consultation reason"></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Confirm Booking</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/appointments.js') }}"></script>
+{% endblock %}

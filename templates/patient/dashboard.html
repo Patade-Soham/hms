@@ -1,0 +1,41 @@
+{% extends "patient_base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Welcome, {{ session_user.name if session_user else 'Patient' }}</h1>
+  <a class="btn btn-primary" href="{{ url_for('patient.patient_book_appointment') }}">Book Appointment</a>
+</section>
+
+<section class="grid-3">
+  <article class="card">
+    <h3>Upcoming Appointments</h3>
+    <ul class="timeline-list">
+      {% for a in upcoming %}
+      <li>{{ a.appt_date }} {{ a.appt_time }} with Dr. {{ a.doctor_name }}<br><span class="status-badge status-{{ a.status|replace('_','-') }}">{{ a.status|replace('_',' ')|title }}</span></li>
+      {% else %}
+      <li class="text-muted">No upcoming appointments.</li>
+      {% endfor %}
+    </ul>
+  </article>
+  <article class="card">
+    <h3>Recent Prescriptions</h3>
+    <ul class="timeline-list">
+      {% for p in prescriptions %}
+      <li>{{ p.medicine_name }} - {{ p.dosage }} ({{ p.duration }})</li>
+      {% else %}
+      <li class="text-muted">No prescriptions yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+  <article class="card">
+    <h3>Pending Bills</h3>
+    <ul class="timeline-list">
+      {% for b in bills %}
+      <li>Bill #{{ b.bill_id }} - Rs. {{ "%.2f"|format(b.total) }}</li>
+      {% else %}
+      <li class="text-muted">No unpaid bills.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

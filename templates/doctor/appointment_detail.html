@@ -1,0 +1,73 @@
+{% extends "doctor_base.html" %}
+{% block title %}Appointment Detail{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Appointment #{{ appt.appt_id }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('doctor.doctor_appointments') }}">Back</a>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Patient Information</h3>
+    <p><strong>Name:</strong> {{ appt.patient_name }}</p>
+    <p><strong>Patient Code:</strong> <span class="mono">{{ appt.patient_code }}</span></p>
+    <p><strong>Date:</strong> {{ appt.appt_date }} {{ appt.appt_time }}</p>
+    <p><strong>Reason:</strong> {{ appt.reason }}</p>
+    <form method="post" action="{{ url_for('doctor.doctor_update_status', appt_id=appt.appt_id) }}" class="row">
+      <select class="form-input" name="status">
+        {% for s in ['pending','confirmed','in_progress','completed','cancelled'] %}
+        <option value="{{ s }}" {% if appt.status == s %}selected{% endif %}>{{ s|replace('_',' ')|title }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary" type="submit">Update Status</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h3>Write Prescription</h3>
+    <form method="post" action="{{ url_for('doctor.doctor_new_prescription') }}" class="form-grid">
+      <input type="hidden" name="appt_id" value="{{ appt.appt_id }}">
+      <div class="form-group">
+        <label class="form-label">Medicine</label>
+        <select class="form-input" name="medicine_id" required>
+          {% for m in medicines %}
+          <option value="{{ m.medicine_id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dosage</label>
+        <input class="form-input" name="dosage" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration</label>
+        <input class="form-input" name="duration" required>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Instructions</label>
+        <textarea class="form-input" name="instructions"></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit">Submit Prescription</button>
+    </form>
+  </article>
+</section>
+
+<section class="card">
+  <h3>Prescriptions</h3>
+  <table class="data-table">
+    <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th><th>Instructions</th></tr></thead>
+    <tbody>
+      {% for p in prescriptions %}
+      <tr>
+        <td>{{ p.medicine_name }}</td>
+        <td>{{ p.dosage }}</td>
+        <td>{{ p.duration }}</td>
+        <td>{{ p.instructions or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted">No prescriptions added yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

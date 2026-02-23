@@ -1,0 +1,17 @@
+{% extends "patient_base.html" %}
+{% block title %}Feedback{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Feedback & Queries</h1>
+</section>
+
+<section class="card">
+  <form method="post" class="form-grid">
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-input" name="message" rows="6" placeholder="Write your feedback or query..." required></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit Feedback</button>
+  </form>
+</section>
+{% endblock %}

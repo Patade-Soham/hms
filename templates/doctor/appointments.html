@@ -1,0 +1,26 @@
+{% extends "doctor_base.html" %}
+{% block title %}My Appointments{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">My Appointments</h1>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead><tr><th>Date</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.appt_date }} {{ a.appt_time }}</td>
+        <td>{{ a.patient_name }}</td>
+        <td>{{ a.reason }}</td>
+        <td><span class="status-badge status-{{ a.status|replace('_','-') }}">{{ a.status|replace('_',' ')|title }}</span></td>
+        <td><a class="btn btn-ghost" href="{{ url_for('doctor.doctor_appointment_detail', appt_id=a.appt_id) }}">Open</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No appointments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

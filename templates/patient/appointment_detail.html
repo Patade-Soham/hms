@@ -1,0 +1,29 @@
+{% extends "patient_base.html" %}
+{% block title %}Appointment Detail{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Appointment #{{ appt.appt_id }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('patient.patient_appointments') }}">Back</a>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Appointment Info</h3>
+    <p><strong>Doctor:</strong> {{ appt.doctor_name }}</p>
+    <p><strong>Date:</strong> {{ appt.appt_date }} {{ appt.appt_time }}</p>
+    <p><strong>Reason:</strong> {{ appt.reason }}</p>
+    <p><strong>Status:</strong> <span class="status-badge status-{{ appt.status|replace('_','-') }}">{{ appt.status|replace('_',' ')|title }}</span></p>
+    <p><strong>Notes:</strong> {{ appt.notes or 'Not available yet.' }}</p>
+  </article>
+  <article class="card">
+    <h3>Prescriptions</h3>
+    <ul class="timeline-list">
+      {% for p in prescriptions %}
+      <li><strong>{{ p.medicine_name }}</strong> - {{ p.dosage }} for {{ p.duration }}<br><span class="text-muted">{{ p.instructions or '' }}</span></li>
+      {% else %}
+      <li class="text-muted">No prescriptions yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

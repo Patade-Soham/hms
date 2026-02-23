@@ -1,0 +1,60 @@
+{% extends "admin_base.html" %}
+{% block title %}Billing | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Billing - {{ patient.name }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('patients.patient_detail', patient_id=patient.patient_id) }}">Back to Patient</a>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Bill Preview</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Consultation</td><td>Rs. {{ "%.2f"|format(preview.consultation_fee) }}</td></tr>
+        <tr><td>Room Charges</td><td>Rs. {{ "%.2f"|format(preview.room_charges) }}</td></tr>
+        <tr><td>Medicine Charges</td><td>Rs. {{ "%.2f"|format(preview.medicine_charges) }}</td></tr>
+        <tr><td>Subtotal</td><td>Rs. {{ "%.2f"|format(preview.subtotal) }}</td></tr>
+        <tr><td>Tax (5%)</td><td>Rs. {{ "%.2f"|format(preview.tax) }}</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>Rs. {{ "%.2f"|format(preview.total) }}</strong></td></tr>
+      </tbody>
+    </table>
+    <form method="post" action="{{ url_for('billing.generate_bill', patient_id=patient.patient_id) }}">
+      <button class="btn btn-primary" type="submit">Generate New Bill</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h3>Patient Summary</h3>
+    <p><strong>Code:</strong> <span class="mono">{{ patient.patient_code }}</span></p>
+    <p><strong>Email:</strong> {{ patient.email }}</p>
+  </article>
+</section>
+
+<section class="card">
+  <h3>Bill History</h3>
+  <table class="data-table">
+    <thead><tr><th>ID</th><th>Total</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td>#{{ b.bill_id }}</td>
+        <td>Rs. {{ "%.2f"|format(b.total) }}</td>
+        <td><span class="status-badge status-{{ b.status }}">{{ b.status|title }}</span></td>
+        <td>{{ b.created_at.strftime('%Y-%m-%d') if b.created_at else '' }}</td>
+        <td class="row-actions">
+          <a class="btn btn-ghost" href="{{ url_for('billing.bill_pdf', bill_id=b.bill_id) }}">PDF</a>
+          {% if b.status != 'paid' %}
+          <form method="post" action="{{ url_for('billing.mark_bill_paid', bill_id=b.bill_id) }}">
+            <button class="btn btn-primary" type="submit">Mark Paid</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No bills generated.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

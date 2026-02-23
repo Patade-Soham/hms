@@ -1,0 +1,26 @@
+{% extends "patient_base.html" %}
+{% block title %}My Bills{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">My Bills</h1>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead><tr><th>Bill ID</th><th>Total</th><th>Status</th><th>Date</th><th>PDF</th></tr></thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td>#{{ b.bill_id }}</td>
+        <td>Rs. {{ "%.2f"|format(b.total) }}</td>
+        <td><span class="status-badge status-{{ b.status }}">{{ b.status|title }}</span></td>
+        <td>{{ b.created_at.strftime('%Y-%m-%d') if b.created_at else '' }}</td>
+        <td><a class="btn btn-ghost" href="{{ url_for('patient.patient_bill_pdf', bill_id=b.bill_id) }}">Download</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No bills generated.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

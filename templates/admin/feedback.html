@@ -1,0 +1,35 @@
+{% extends "admin_base.html" %}
+{% block title %}Feedback | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Patient Feedback</h1>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead><tr><th>User</th><th>Email</th><th>Message</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for row in feedback_rows %}
+      <tr>
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.message }}</td>
+        <td>{{ row.submitted_at.strftime('%Y-%m-%d %H:%M') if row.submitted_at else '' }}</td>
+        <td><span class="status-badge {% if row.status == 'reviewed' %}status-confirmed{% else %}status-pending{% endif %}">{{ row.status|title }}</span></td>
+        <td>
+          {% if row.status != 'reviewed' %}
+          <form method="post" action="{{ url_for('feedback.mark_feedback_reviewed', feedback_id=row.feedback_id) }}">
+            <button class="btn btn-primary" type="submit">Mark Reviewed</button>
+          </form>
+          {% else %}
+          <span class="text-muted">Done</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-muted">No feedback submitted yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

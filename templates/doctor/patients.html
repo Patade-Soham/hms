@@ -1,0 +1,24 @@
+{% extends "doctor_base.html" %}
+{% block title %}My Patients{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">My Patients</h1>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead><tr><th>Patient Code</th><th>Name</th><th>Phone</th></tr></thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td class="mono">{{ p.patient_code }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.phone }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="text-muted">No assigned patients yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

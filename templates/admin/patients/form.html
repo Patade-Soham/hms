@@ -1,0 +1,57 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ 'Edit' if edit_mode else 'Add' }} Patient{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">{{ 'Edit' if edit_mode else 'Add' }} Patient</h1>
+  <a class="btn btn-ghost" href="{{ url_for('patients.list_patients') }}">Back</a>
+</section>
+
+<section class="card">
+  <form method="post" class="form-grid two-col">
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" name="name" value="{{ patient.name if patient else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" name="email" value="{{ patient.email if patient else '' }}" required>
+    </div>
+    {% if not edit_mode %}
+    <div class="form-group">
+      <label class="form-label">Temporary Password</label>
+      <input class="form-input" name="password" placeholder="patient123">
+    </div>
+    {% endif %}
+    <div class="form-group">
+      <label class="form-label">Phone</label>
+      <input class="form-input" name="phone" value="{{ patient.phone if patient else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">DOB</label>
+      <input class="form-input" type="date" name="dob" value="{{ patient.dob }}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gender</label>
+      <select class="form-input" name="gender">
+        {% set g = patient.gender if patient else '' %}
+        <option value="male" {% if g == 'male' %}selected{% endif %}>Male</option>
+        <option value="female" {% if g == 'female' %}selected{% endif %}>Female</option>
+        <option value="other" {% if g == 'other' %}selected{% endif %}>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Blood Group</label>
+      <input class="form-input" name="blood_group" value="{{ patient.blood_group if patient else '' }}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emergency Contact</label>
+      <input class="form-input" name="emergency_contact" value="{{ patient.emergency_contact if patient else '' }}">
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Address</label>
+      <textarea class="form-input" name="address">{{ patient.address if patient else '' }}</textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">{{ 'Update' if edit_mode else 'Create' }} Patient</button>
+  </form>
+</section>
+{% endblock %}

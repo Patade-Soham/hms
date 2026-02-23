@@ -1,0 +1,56 @@
+{% extends "admin_base.html" %}
+{% block title %}Patient Detail{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">{{ patient.name }}</h1>
+  <div class="row">
+    <a class="btn btn-ghost" href="{{ url_for('patients.edit_patient', patient_id=patient.patient_id) }}">Edit</a>
+    <a class="btn btn-ghost" href="{{ url_for('billing.patient_billing', patient_id=patient.patient_id) }}">Billing</a>
+  </div>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Profile</h3>
+    <p><strong>Code:</strong> <span class="mono">{{ patient.patient_code }}</span></p>
+    <p><strong>Email:</strong> {{ patient.email }}</p>
+    <p><strong>Phone:</strong> {{ patient.phone }}</p>
+    <p><strong>DOB:</strong> {{ patient.dob or '-' }}</p>
+    <p><strong>Blood Group:</strong> {{ patient.blood_group or '-' }}</p>
+    <p><strong>Address:</strong> {{ patient.address or '-' }}</p>
+  </article>
+  <article class="card">
+    <h3>Medical Timeline</h3>
+    <ul class="timeline-list">
+      {% for v in visits %}
+      <li>
+        <strong>{{ v.appt_date }} {{ v.appt_time }}</strong> with Dr. {{ v.doctor_name }}
+        <span class="status-badge status-{{ v.status|replace('_','-') }}">{{ v.status|replace('_',' ')|title }}</span>
+        <div class="text-muted">{{ v.notes or 'No notes' }}</div>
+      </li>
+      {% else %}
+      <li class="text-muted">No visits yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="card">
+  <h3>Bills</h3>
+  <table class="data-table">
+    <thead><tr><th>Bill ID</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td>#{{ b.bill_id }}</td>
+        <td>Rs. {{ "%.2f"|format(b.total) }}</td>
+        <td><span class="status-badge status-{{ b.status }}">{{ b.status|title }}</span></td>
+        <td>{{ b.created_at.strftime('%Y-%m-%d') if b.created_at else '' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted">No bills generated.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

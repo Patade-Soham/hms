@@ -1,0 +1,35 @@
+{% extends "admin_base.html" %}
+{% block title %}Doctors | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Doctors</h1>
+  <a class="btn btn-primary" href="{{ url_for('doctors.new_doctor') }}">Add Doctor</a>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Specialization</th><th>Department</th><th>Fee</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for d in doctors %}
+      <tr>
+        <td>{{ d.name }}</td>
+        <td>{{ d.specialization }}</td>
+        <td>{{ d.dept_name or '-' }}</td>
+        <td>Rs. {{ "%.2f"|format(d.consultation_fee or 0) }}</td>
+        <td class="row-actions">
+          <a class="btn btn-ghost" href="{{ url_for('doctors.doctor_detail', doctor_id=d.doctor_id) }}">View</a>
+          <a class="btn btn-ghost" href="{{ url_for('doctors.edit_doctor', doctor_id=d.doctor_id) }}">Edit</a>
+          <form method="post" action="{{ url_for('doctors.delete_doctor', doctor_id=d.doctor_id) }}" onsubmit="return confirm('Archive this doctor?')">
+            <button class="btn btn-danger" type="submit">Archive</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No doctors available.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

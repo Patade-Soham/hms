@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Patient Portal | MediCore{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+</head>
+<body class="patient-shell">
+  <header class="patient-topbar">
+    <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">MediCore Patient Portal</span></div>
+    <nav class="patient-nav">
+      <a class="{% if active_page == 'dashboard' %}active{% endif %}" href="{{ url_for('patient.patient_dashboard') }}">Dashboard</a>
+      <a class="{% if active_page == 'appointments' %}active{% endif %}" href="{{ url_for('patient.patient_appointments') }}">Appointments</a>
+      <a class="{% if active_page == 'prescriptions' %}active{% endif %}" href="{{ url_for('patient.patient_prescriptions') }}">Prescriptions</a>
+      <a class="{% if active_page == 'bills' %}active{% endif %}" href="{{ url_for('patient.patient_bills') }}">Bills</a>
+      <a class="{% if active_page == 'profile' %}active{% endif %}" href="{{ url_for('patient.patient_profile') }}">Profile</a>
+      <a class="{% if active_page == 'feedback' %}active{% endif %}" href="{{ url_for('feedback.submit_feedback') }}">Feedback</a>
+    </nav>
+    <div class="top-actions">
+      <span class="chip">{{ session_user.name if session_user else 'Patient' }}</span>
+      <a class="btn btn-ghost" href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+  </header>
+  <main class="main-content patient-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <script>showToast({{ message|tojson }}, {{ category|tojson }});</script>
+    {% endfor %}
+  {% endwith %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

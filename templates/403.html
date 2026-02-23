@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>403</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-body">
+  <section class="landing-card">
+    <h1>403</h1>
+    <p>You do not have permission to access this page.</p>
+    <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Go to Login</a>
+  </section>
+</body>
+</html>

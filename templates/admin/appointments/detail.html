@@ -1,0 +1,55 @@
+{% extends "admin_base.html" %}
+{% block title %}Appointment #{{ appt.appt_id }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Appointment #{{ appt.appt_id }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('appointments.admin_appointments') }}">Back</a>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Details</h3>
+    <p><strong>Patient:</strong> {{ appt.patient_name }} ({{ appt.patient_code }})</p>
+    <p><strong>Doctor:</strong> {{ appt.doctor_name }}</p>
+    <p><strong>Date:</strong> {{ appt.appt_date }} {{ appt.appt_time }}</p>
+    <p><strong>Reason:</strong> {{ appt.reason }}</p>
+    <p><strong>Status:</strong> <span class="status-badge status-{{ appt.status|replace('_','-') }}">{{ appt.status|replace('_',' ')|title }}</span></p>
+  </article>
+
+  <article class="card">
+    <h3>Update Status</h3>
+    <form method="post" action="{{ url_for('appointments.update_appointment_status', appt_id=appt.appt_id) }}" class="row">
+      <select class="form-input" name="status">
+        {% for s in ['pending','confirmed','in_progress','completed','cancelled'] %}
+        <option value="{{ s }}" {% if appt.status == s %}selected{% endif %}>{{ s|replace('_',' ')|title }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+    <form method="post" action="{{ url_for('appointments.update_appointment_notes', appt_id=appt.appt_id) }}" class="form-grid">
+      <label class="form-label">Consultation Notes</label>
+      <textarea class="form-input" name="notes" rows="5">{{ appt.notes or '' }}</textarea>
+      <button class="btn btn-ghost" type="submit">Save Notes</button>
+    </form>
+  </article>
+</section>
+
+<section class="card">
+  <h3>Prescriptions</h3>
+  <table class="data-table">
+    <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th><th>Instructions</th></tr></thead>
+    <tbody>
+      {% for p in prescriptions %}
+      <tr>
+        <td>{{ p.medicine_name }}</td>
+        <td>{{ p.dosage }}</td>
+        <td>{{ p.duration }}</td>
+        <td>{{ p.instructions or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted">No prescriptions recorded.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

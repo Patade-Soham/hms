@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Invoice #{{ bill.bill_id }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 32px; color: #111; }
+    h1 { margin: 0 0 8px; }
+    .meta { color: #444; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    .total { font-weight: bold; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>MediCore HMS Invoice</h1>
+  <div class="meta">
+    <div>Bill ID: #{{ bill.bill_id }}</div>
+    <div>Patient: {{ bill.patient_name }} ({{ bill.patient_code }})</div>
+    <div>Email: {{ bill.patient_email }}</div>
+    <div>Date: {{ bill.created_at.strftime('%Y-%m-%d %H:%M') if bill.created_at else '' }}</div>
+    <div>Status: {{ bill.status|title }}</div>
+  </div>
+
+  <table>
+    <thead><tr><th>Item</th><th>Amount (Rs.)</th></tr></thead>
+    <tbody>
+      <tr><td>Consultation Fee</td><td>{{ "%.2f"|format(bill.consultation_fee) }}</td></tr>
+      <tr><td>Room Charges</td><td>{{ "%.2f"|format(bill.room_charges) }}</td></tr>
+      <tr><td>Medicine Charges</td><td>{{ "%.2f"|format(bill.medicine_charges) }}</td></tr>
+      <tr><td>Subtotal</td><td>{{ "%.2f"|format(bill.subtotal) }}</td></tr>
+      <tr><td>Tax (5%)</td><td>{{ "%.2f"|format(bill.tax) }}</td></tr>
+      <tr><td class="total">Total</td><td class="total">{{ "%.2f"|format(bill.total) }}</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

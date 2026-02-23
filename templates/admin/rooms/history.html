@@ -1,0 +1,27 @@
+{% extends "admin_base.html" %}
+{% block title %}Admission History{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Admission History</h1>
+  <a class="btn btn-ghost" href="{{ url_for('rooms.room_grid') }}">Back to Rooms</a>
+</section>
+
+<section class="card">
+  <h3>{{ patient.name }} ({{ patient.patient_code }})</h3>
+  <table class="data-table">
+    <thead><tr><th>Room</th><th>Type</th><th>Admitted On</th><th>Discharged On</th></tr></thead>
+    <tbody>
+      {% for h in history %}
+      <tr>
+        <td>{{ h.room_number }}</td>
+        <td>{{ h.type|replace('_',' ')|title }}</td>
+        <td>{{ h.admitted_on }}</td>
+        <td>{{ h.discharged_on or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted">No admission records.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

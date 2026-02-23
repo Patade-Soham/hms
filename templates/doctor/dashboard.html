@@ -1,0 +1,38 @@
+{% extends "doctor_base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Doctor Dashboard</h1>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Today's Schedule</h3>
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in today_schedule %}
+        <tr>
+          <td>{{ a.appt_time }}</td>
+          <td>{{ a.patient_name }}</td>
+          <td>{{ a.reason }}</td>
+          <td><span class="status-badge status-{{ a.status|replace('_','-') }}">{{ a.status|replace('_',' ')|title }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-muted">No appointments today.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+  <article class="card">
+    <h3>Recent Patients</h3>
+    <ul class="timeline-list">
+      {% for p in recent_patients %}
+      <li><span class="mono">{{ p.patient_code }}</span> {{ p.name }}</li>
+      {% else %}
+      <li class="text-muted">No patient history yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

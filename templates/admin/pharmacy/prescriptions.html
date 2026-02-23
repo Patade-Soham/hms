@@ -1,0 +1,26 @@
+{% extends "admin_base.html" %}
+{% block title %}Prescriptions{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Prescriptions for Appointment #{{ appt_id }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('appointments.appointment_detail', appt_id=appt_id) }}">Back to Appointment</a>
+</section>
+
+<section class="card">
+  <table class="data-table">
+    <thead><tr><th>Medicine</th><th>Dosage</th><th>Duration</th><th>Instructions</th></tr></thead>
+    <tbody>
+      {% for p in prescriptions %}
+      <tr>
+        <td>{{ p.medicine_name }}</td>
+        <td>{{ p.dosage }}</td>
+        <td>{{ p.duration }}</td>
+        <td>{{ p.instructions or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted">No prescriptions available.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

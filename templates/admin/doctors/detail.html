@@ -1,0 +1,37 @@
+{% extends "admin_base.html" %}
+{% block title %}Doctor Detail{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Dr. {{ doctor.name }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('doctors.edit_doctor', doctor_id=doctor.doctor_id) }}">Edit Profile</a>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Profile</h3>
+    <p><strong>Email:</strong> {{ doctor.email }}</p>
+    <p><strong>Department:</strong> {{ doctor.dept_name or '-' }}</p>
+    <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+    <p><strong>License:</strong> <span class="mono">{{ doctor.license_no }}</span></p>
+    <p><strong>Available Days:</strong> {{ doctor.available_days or '-' }}</p>
+    <p><strong>Fee:</strong> Rs. {{ "%.2f"|format(doctor.consultation_fee or 0) }}</p>
+  </article>
+  <article class="card">
+    <h3>Recent Appointments</h3>
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Patient</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.appt_date }} {{ a.appt_time }}</td>
+        <td>{{ a.patient_name }}</td>
+        <td><span class="status-badge status-{{ a.status|replace('_','-') }}">{{ a.status|replace('_',' ')|title }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="text-muted">No appointments yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </article>
+</section>
+{% endblock %}

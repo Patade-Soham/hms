@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MediCore HMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-body">
+  <section class="landing-card">
+    <h1>MediCore HMS</h1>
+    <p>Hospital Management System built with Flask + MySQL.</p>
+    <div class="row">
+      <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="btn btn-ghost" href="{{ url_for('auth.register') }}">Patient Register</a>
+    </div>
+  </section>
+</body>
+</html>

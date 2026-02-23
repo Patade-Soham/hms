@@ -1,0 +1,57 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ 'Edit' if edit_mode else 'Add' }} Doctor{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">{{ 'Edit' if edit_mode else 'Add' }} Doctor</h1>
+  <a class="btn btn-ghost" href="{{ url_for('doctors.list_doctors') }}">Back</a>
+</section>
+
+<section class="card">
+  <form method="post" class="form-grid two-col">
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" name="name" value="{{ doctor.name if doctor else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" name="email" value="{{ doctor.email if doctor else '' }}" required>
+    </div>
+    {% if not edit_mode %}
+    <div class="form-group">
+      <label class="form-label">Temporary Password</label>
+      <input class="form-input" name="password" placeholder="doctor123">
+    </div>
+    {% endif %}
+    <div class="form-group">
+      <label class="form-label">Specialization</label>
+      <input class="form-input" name="specialization" value="{{ doctor.specialization if doctor else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Department</label>
+      <select class="form-input" name="dept_id">
+        <option value="">Select department</option>
+        {% for dep in departments %}
+        <option value="{{ dep.dept_id }}" {% if doctor and doctor.dept_id == dep.dept_id %}selected{% endif %}>{{ dep.dept_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">License No</label>
+      <input class="form-input" name="license_no" value="{{ doctor.license_no if doctor else '' }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Available Days</label>
+      <input class="form-input" name="available_days" value="{{ doctor.available_days if doctor else 'Mon,Tue,Wed,Thu,Fri' }}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Consultation Fee</label>
+      <input class="form-input" type="number" step="0.01" name="consultation_fee" value="{{ doctor.consultation_fee if doctor else '' }}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone</label>
+      <input class="form-input" name="phone" value="{{ doctor.phone if doctor else '' }}">
+    </div>
+    <button class="btn btn-primary" type="submit">{{ 'Update' if edit_mode else 'Create' }} Doctor</button>
+  </form>
+</section>
+{% endblock %}

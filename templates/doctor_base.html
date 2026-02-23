@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Doctor Portal | MediCore{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+</head>
+<body class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-row"><div class="logo-dot"></div><span class="logo-text">Doctor Portal</span></div>
+    <nav class="nav-list">
+      <a class="nav-item {% if active_page == 'dashboard' %}active{% endif %}" href="{{ url_for('doctor.doctor_dashboard') }}"><i class="fa-solid fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
+      <a class="nav-item {% if active_page == 'appointments' %}active{% endif %}" href="{{ url_for('doctor.doctor_appointments') }}"><i class="fa-solid fa-calendar-day"></i><span class="nav-label">Appointments</span></a>
+      <a class="nav-item {% if active_page == 'patients' %}active{% endif %}" href="{{ url_for('doctor.doctor_patients') }}"><i class="fa-solid fa-users"></i><span class="nav-label">Patients</span></a>
+    </nav>
+  </aside>
+
+  <header class="topbar">
+    <button class="btn-icon mobile-only" id="menu-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    <div class="crumbs">Doctor Workspace</div>
+    <div class="top-actions">
+      <span class="chip">{{ session_user.name if session_user else 'Doctor' }}</span>
+      <a class="btn btn-ghost" href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+  </header>
+
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <script>showToast({{ message|tojson }}, {{ category|tojson }});</script>
+    {% endfor %}
+  {% endwith %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

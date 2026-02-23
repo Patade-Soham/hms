@@ -1,0 +1,33 @@
+{% extends "patient_base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">My Profile</h1>
+</section>
+
+<section class="card">
+  <form method="post" class="form-grid two-col">
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" name="name" value="{{ patient.name }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" value="{{ patient.email }}" disabled>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone</label>
+      <input class="form-input" name="phone" value="{{ patient.phone }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emergency Contact</label>
+      <input class="form-input" name="emergency_contact" value="{{ patient.emergency_contact or '' }}">
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Address</label>
+      <textarea class="form-input" name="address">{{ patient.address or '' }}</textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Save Changes</button>
+  </form>
+</section>
+{% endblock %}

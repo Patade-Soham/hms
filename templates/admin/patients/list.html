@@ -1,0 +1,52 @@
+{% extends "admin_base.html" %}
+{% block title %}Patients | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Patients</h1>
+  <a class="btn btn-primary" href="{{ url_for('patients.new_patient') }}">Add Patient</a>
+</section>
+
+<section class="card">
+  <div class="toolbar">
+    <input class="form-input" id="patient-search" placeholder="Search by name, code, or phone">
+  </div>
+  <table class="data-table" id="patient-table">
+    <thead>
+      <tr><th>Patient ID</th><th>Name</th><th>Blood</th><th>Phone</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td class="mono">{{ p.patient_code }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.blood_group or '-' }}</td>
+        <td>{{ p.phone }}</td>
+        <td class="row-actions">
+          <a class="btn btn-ghost" href="{{ url_for('patients.patient_detail', patient_id=p.patient_id) }}">View</a>
+          <a class="btn btn-ghost" href="{{ url_for('patients.edit_patient', patient_id=p.patient_id) }}">Edit</a>
+          <form method="post" action="{{ url_for('patients.delete_patient', patient_id=p.patient_id) }}" onsubmit="return confirm('Archive this patient?')">
+            <button class="btn btn-danger" type="submit">Archive</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No patients found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="pager">
+    {% if page > 1 %}
+      <a class="btn btn-ghost" href="{{ url_for('patients.list_patients', page=page-1) }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page }} / {{ ((total - 1) // per_page) + 1 if total else 1 }}</span>
+    {% if (page * per_page) < total %}
+      <a class="btn btn-ghost" href="{{ url_for('patients.list_patients', page=page+1) }}">Next</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+{% endblock %}

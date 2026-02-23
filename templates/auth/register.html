@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Register | MediCore HMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-body">
+  <section class="auth-card auth-wide">
+    <h1 class="display-lg">Patient Registration</h1>
+    <form method="post" class="form-grid two-col">
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input class="form-input" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone</label>
+        <input class="form-input" id="phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dob">DOB</label>
+        <input class="form-input" type="date" id="dob" name="dob">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="gender">Gender</label>
+        <select class="form-input" id="gender" name="gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="blood_group">Blood Group</label>
+        <input class="form-input" id="blood_group" name="blood_group" placeholder="A+">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="emergency_contact">Emergency Contact</label>
+        <input class="form-input" id="emergency_contact" name="emergency_contact">
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="address">Address</label>
+        <textarea class="form-input" id="address" name="address"></textarea>
+      </div>
+      <div class="row full">
+        <button class="btn btn-primary" type="submit">Register</button>
+        <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Back to Login</a>
+      </div>
+    </form>
+  </section>
+  <div id="toast-container" class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <script>showToast({{ message|tojson }}, {{ category|tojson }});</script>
+    {% endfor %}
+  {% endwith %}
+</body>
+</html>

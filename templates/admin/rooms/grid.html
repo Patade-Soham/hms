@@ -1,0 +1,84 @@
+{% extends "admin_base.html" %}
+{% block title %}Rooms | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Rooms & Admissions</h1>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Add Room</h3>
+    <form method="post" action="{{ url_for('rooms.add_room') }}" class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Room Number</label>
+        <input class="form-input" name="room_number" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-input" name="type">
+          <option value="general">General</option>
+          <option value="semi_private">Semi-Private</option>
+          <option value="private">Private</option>
+          <option value="icu">ICU</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Floor</label>
+        <input class="form-input" name="floor">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Price/Day</label>
+        <input class="form-input" type="number" step="0.01" name="price_per_day">
+      </div>
+      <button class="btn btn-primary" type="submit">Add Room</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h3>Filter</h3>
+    <form method="get" class="toolbar">
+      <select class="form-input" name="type">
+        <option value="">All Types</option>
+        {% for t in ['general','semi_private','private','icu'] %}
+        <option value="{{ t }}" {% if request.args.get('type') == t %}selected{% endif %}>{{ t|replace('_',' ')|title }}</option>
+        {% endfor %}
+      </select>
+      <select class="form-input" name="status">
+        <option value="">All Status</option>
+        <option value="available" {% if request.args.get('status') == 'available' %}selected{% endif %}>Available</option>
+        <option value="occupied" {% if request.args.get('status') == 'occupied' %}selected{% endif %}>Occupied</option>
+      </select>
+      <button class="btn btn-ghost" type="submit">Apply</button>
+    </form>
+  </article>
+</section>
+
+<section class="room-grid">
+  {% for room in rooms %}
+  <article class="room-card {{ room.status }}">
+    <h4>{{ room.room_number }}</h4>
+    <p>{{ room.type|replace('_',' ')|title }} | Floor {{ room.floor or '-' }}</p>
+    <p>Rs. {{ "%.2f"|format(room.price_per_day or 0) }} / day</p>
+    {% if room.status == 'available' %}
+      <form method="post" action="{{ url_for('rooms.admit_patient', room_id=room.room_id) }}" class="form-grid">
+        <select class="form-input" name="patient_id" required>
+          <option value="">Select Patient</option>
+          {% for p in patients %}
+          <option value="{{ p.patient_id }}">{{ p.patient_code }} - {{ p.name }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Admit</button>
+      </form>
+    {% else %}
+      <p><strong>Patient:</strong> {{ room.patient_name }}</p>
+      <p><strong>Admitted:</strong> {{ room.admitted_on }}</p>
+      <form method="post" action="{{ url_for('rooms.discharge_patient', admission_id=room.admission_id) }}" onsubmit="return confirm('Discharge patient?')">
+        <button class="btn btn-danger" type="submit">Discharge</button>
+      </form>
+    {% endif %}
+  </article>
+  {% else %}
+  <p class="text-muted">No rooms available.</p>
+  {% endfor %}
+</section>
+{% endblock %}

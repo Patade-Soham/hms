@@ -1,0 +1,51 @@
+{% extends "admin_base.html" %}
+{% block title %}Departments | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Departments</h1>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Add Department</h3>
+    <form method="post" class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Department Name</label>
+        <input class="form-input" name="dept_name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Head Doctor</label>
+        <select class="form-input" name="head_doctor_id">
+          <option value="">None</option>
+          {% for d in doctors %}
+          <option value="{{ d.doctor_id }}">{{ d.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Create Department</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h3>Existing Departments</h3>
+    <table class="data-table">
+      <thead><tr><th>Name</th><th>Head</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for dep in departments %}
+        <tr>
+          <td>{{ dep.dept_name }}</td>
+          <td>{{ dep.head_doctor or '-' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('departments.delete_department', dept_id=dep.dept_id) }}" onsubmit="return confirm('Delete this department?')">
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-muted">No departments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+</section>
+{% endblock %}

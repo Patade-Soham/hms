@@ -1,0 +1,95 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Dashboard | MediCore{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1 class="display-md">Admin Dashboard</h1>
+  <a class="btn btn-primary" href="{{ url_for('appointments.booking_wizard') }}">Book Appointment</a>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card">
+    <span class="stat-label">Total Patients</span>
+    <span class="stat-value">{{ stats.total_patients }}</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Appointments Today</span>
+    <span class="stat-value">{{ stats.appointments_today }}</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Revenue</span>
+    <span class="stat-value">Rs. {{ "%.2f"|format(stats.revenue or 0) }}</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Available Beds</span>
+    <span class="stat-value">{{ stats.available_beds }}</span>
+  </article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Monthly Appointments</h3>
+    <canvas id="apptChart" height="160"></canvas>
+  </article>
+  <article class="card">
+    <h3>Recent Registrations</h3>
+    <ul class="timeline-list">
+      {% for item in recent_registrations %}
+      <li><span class="mono">{{ item.patient_code }}</span> {{ item.name }} <span class="text-muted">{{ item.created_at.strftime('%Y-%m-%d') if item.created_at else '' }}</span></li>
+      {% else %}
+      <li class="text-muted">No recent registrations.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Recent Appointments</h3>
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for row in recent_appointments %}
+        <tr>
+          <td>{{ row.appt_date }} {{ row.appt_time }}</td>
+          <td>{{ row.patient_name }}</td>
+          <td>{{ row.doctor_name }}</td>
+          <td><span class="status-badge status-{{ row.status|replace('_','-') }}">{{ row.status|replace('_',' ')|title }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-muted">No appointments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+  <article class="card">
+    <h3>Bed Occupancy</h3>
+    <div class="room-mini-grid">
+      {% for room in rooms %}
+      <div class="room-mini {{ room.status }}">
+        <strong>{{ room.room_number }}</strong>
+        <small>{{ room.type|replace('_',' ')|title }}</small>
+        <small>{{ room.patient_name or 'Available' }}</small>
+      </div>
+      {% else %}
+      <p class="text-muted">No rooms configured.</p>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const monthly = {{ monthly|tojson }};
+  const labels = monthly.map(r => r.month);
+  const values = monthly.map(r => r.total);
+  const ctx = document.getElementById('apptChart');
+  if (ctx && window.Chart) {
+    new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Appointments', data: values, backgroundColor: '#0D9488' }] },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+    });
+  }
+</script>
+{% endblock %}
